@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CustomViewViewLoadStatus"
 include(":app")
- 
+include(":viewLoadStatusLibs")

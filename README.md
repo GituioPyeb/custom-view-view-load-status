@@ -1,5 +1,9 @@
 # ViewLoadStatus：更好的管理View 状态
 
+- 支持 ConstraintLayout 布局
+- 支持 LinearLayout 布局
+- 未测试 RelativeLayout 布局
+
 ## 功能展示：
 
 ![动画](images/动画.gif)
@@ -217,10 +221,14 @@ ViewLoadStatusManager.getInstance().unbindViews(this)
 ## 部署
 
 1. 下载源代码，复制 `View`文件夹下的文件，可以自行更改UI。
+2. 使用发布版本的 Jar 包导入。
 
 
+## 项目地址
+[GitHub 地址](https://github.com/GituioPyeb/custom-view-view-load-status.git)
 
 
+欢迎大家纠正
 
 
 

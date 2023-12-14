@@ -6,12 +6,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customviewviewloadstatus.adapter.TestContentAdapter
 import com.example.customviewviewloadstatus.databinding.ActivityMainBinding
-import com.example.customviewviewloadstatus.view.showEmptyStatus
-import com.example.customviewviewloadstatus.view.showErrorStatus
-import com.example.customviewviewloadstatus.view.showFinishedStatus
-import com.example.customviewviewloadstatus.view.showLoadingStatus
-import com.example.mypototamusic.view.ViewLoadStatus
-import com.example.mypototamusic.view.ViewLoadStatusManager
+import com.example.viewloadstatuslibs.view.ViewLoadStatus
+import com.example.viewloadstatuslibs.view.ViewLoadStatusManager
+import com.example.viewloadstatuslibs.view.showEmptyStatus
+import com.example.viewloadstatuslibs.view.showErrorStatus
+import com.example.viewloadstatuslibs.view.showFinishedStatus
+import com.example.viewloadstatuslibs.view.showLoadingStatus
 import java.util.Timer
 import java.util.TimerTask
 
