@@ -170,7 +170,7 @@ view.showFinishedStatus
 
 不适用扩展函数：
 
-![image-20231214162358482](自定义View-ViewLoadStatus.assets\image-20231214162358482.png)
+![image-20231214162358482](images/image-20231214162358482.png)
 
 ```kotlin
 ViewLoadStatus(this).apply {
