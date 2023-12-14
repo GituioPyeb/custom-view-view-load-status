@@ -228,7 +228,6 @@ ViewLoadStatusManager.getInstance().unbindViews(this)
 [GitHub 地址](https://github.com/GituioPyeb/custom-view-view-load-status.git)
 
 
-欢迎大家纠正
 
 
 
