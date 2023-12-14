@@ -1,4 +1,4 @@
-package com.example.customviewviewloadstatus
+package com.example.customviewviewloadstatus.view
 
 import android.content.Context
 import android.content.res.Configuration

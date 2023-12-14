@@ -3,11 +3,13 @@ package com.example.mypototamusic.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.transition.TransitionManager
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +22,16 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.setPadding
-import com.example.customviewviewloadstatus.Utils
-import com.example.customviewviewloadstatus.dp
+import com.example.customviewviewloadstatus.view.Utils
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import kotlin.RuntimeException
 
+
+val Float.dp
+    get()= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,this, Resources.getSystem().displayMetrics)
+
+val Int.dp
+    get() = this.toFloat().dp
 
 @SuppressLint("ViewConstructor")
 class ViewLoadStatus(context: Context) : LinearLayout(context) {

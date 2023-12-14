@@ -6,6 +6,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customviewviewloadstatus.adapter.TestContentAdapter
 import com.example.customviewviewloadstatus.databinding.ActivityMainBinding
+import com.example.customviewviewloadstatus.view.showEmptyStatus
+import com.example.customviewviewloadstatus.view.showErrorStatus
+import com.example.customviewviewloadstatus.view.showFinishedStatus
+import com.example.customviewviewloadstatus.view.showLoadingStatus
 import com.example.mypototamusic.view.ViewLoadStatus
 import com.example.mypototamusic.view.ViewLoadStatusManager
 import java.util.Timer
@@ -16,13 +20,21 @@ class MainActivity : AppCompatActivity() {
         TestContentAdapter()
     }
     private val dataList = List(100) { index -> "Item ${index + 1}" }
+    private lateinit var binding:ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        binding.cardView.showEmptyStatus
+
+        binding.cardView.showErrorStatus
+        ViewLoadStatusManager.getInstance().setOnErrorRetryClickListener(binding.cardView){
+            Toast.makeText(this@MainActivity, "错误时", Toast.LENGTH_SHORT).show()
+        }
+        ViewLoadStatusManager.getInstance().setOnEmptyRetryClickListener(binding.cardView){
+            Toast.makeText(this@MainActivity, "空状态时", Toast.LENGTH_SHORT).show()
+        }
 //        binding.cardView.setOnErrorRetryClickListener{
 //            Toast.makeText(this@MainActivity, "错误时", Toast.LENGTH_SHORT).show()
 //        }
@@ -43,15 +55,15 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
         
-        binding.image1.setOnErrorRetryClickListener {
-            Toast.makeText(this, "图片错误时", Toast.LENGTH_SHORT).show()
-        }
-        binding.image1.setOnEmptyRetryClickListener {
-            Toast.makeText(this, "图片为空时", Toast.LENGTH_SHORT).show()
-        }
+//        binding.image1.setOnErrorRetryClickListener {
+//            Toast.makeText(this, "图片错误时", Toast.LENGTH_SHORT).show()
+//        }
+//        binding.image1.setOnEmptyRetryClickListener {
+//            Toast.makeText(this, "图片为空时", Toast.LENGTH_SHORT).show()
+//        }
 
         binding.changeViewLoadStatusBtn.setOnClickListener {
-            when(ViewLoadStatusManager.init().getViewLoadStatus(binding.image1)){
+            when(ViewLoadStatusManager.getInstance().getViewLoadStatus(binding.image1)){
                 ViewLoadStatus.VIEW_STATUS.LOADING -> {
                     binding.image1.showErrorStatus
                     binding.cardView.showErrorStatus
@@ -105,6 +117,11 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ViewLoadStatusManager.getInstance().unbindViews(this)
     }
 }
 

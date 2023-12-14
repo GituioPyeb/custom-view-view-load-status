@@ -1,85 +1,100 @@
 package com.example.mypototamusic.view
 
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.children
+import com.example.customviewviewloadstatus.MainActivity
 
-class ViewLoadStatusManager {
-    private val TAG="ViewLoadStatusManager"
-    companion object{
-        private var viewStatusManager:ViewLoadStatusManager?=null
-        fun init(): ViewLoadStatusManager {
-            if(viewStatusManager==null){
-                viewStatusManager=ViewLoadStatusManager()
+class ViewLoadStatusManager private constructor(){
+    private val TAG = "ViewLoadStatusManager" // 日志标签
+
+    companion object {
+        @Volatile
+        private var instance: ViewLoadStatusManager? = null
+        // 获取或初始化 ViewLoadStatusManager 的单例实例
+        fun getInstance(): ViewLoadStatusManager {
+            return instance ?: synchronized(this) {
+                instance ?: ViewLoadStatusManager().also { instance = it }
             }
-            return viewStatusManager!!
         }
     }
-    private val viewLoadStatusMap=HashMap<View,ViewLoadStatus>()
-    private val viewLoadStatusErrorClickListenerMap=HashMap<View,(v:View)->Unit>()
-    private val viewLoadStatusEmptyClickListenerMap=HashMap<View,(v:View)->Unit>()
+
+    private val viewLoadStatusMap = LinkedHashMap<View, ViewLoadStatus>() // 存储视图和对应的 ViewLoadStatus 实例的映射关系
 
     @Synchronized
     fun loading(view: View): ViewLoadStatus {
-        var viewLoadStatus = viewLoadStatusMap[view]
-        if(viewLoadStatus==null){
-            viewLoadStatus= ViewLoadStatus(view.context)
-            viewLoadStatusMap[view] = viewLoadStatus
-        }
-        viewLoadStatus.showViewIsLoading(view)
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
+        viewLoadStatus.showViewIsLoading(view) // 展示加载状态
         return viewLoadStatus
     }
+
     @Synchronized
     fun error(view: View): ViewLoadStatus {
-        var viewLoadStatus = viewLoadStatusMap[view]
-        if(viewLoadStatus==null){
-            viewLoadStatus= ViewLoadStatus(view.context)
-            viewLoadStatusMap[view] = viewLoadStatus
-        }
-        viewLoadStatus.showViewIsError(view)
-        if (viewLoadStatusErrorClickListenerMap[view]!=null) {
-            viewLoadStatus.setOnErrorRetryClickListener(viewLoadStatusErrorClickListenerMap[view]!!)
-        }
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
+        viewLoadStatus.showViewIsError(view) // 展示错误状态
         return viewLoadStatus
     }
+
     @Synchronized
     fun empty(view: View): ViewLoadStatus {
-        var viewLoadStatus = viewLoadStatusMap[view]
-        if(viewLoadStatus==null){
-            viewLoadStatus= ViewLoadStatus(view.context)
-            viewLoadStatusMap[view] = viewLoadStatus
-        }
-        viewLoadStatus.showViewEmpty(view)
-        if (viewLoadStatusEmptyClickListenerMap[view]!=null) {
-            viewLoadStatus.setOnEmptyRetryClickListener(viewLoadStatusEmptyClickListenerMap[view]!!)
-        }
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
+        viewLoadStatus.showViewEmpty(view) // 展示空状态
         return viewLoadStatus
     }
+
     @Synchronized
     fun finished(view: View): ViewLoadStatus {
-        var viewLoadStatus = viewLoadStatusMap[view]
-        if(viewLoadStatus==null){
-            viewLoadStatus= ViewLoadStatus(view.context)
-            viewLoadStatusMap[view] = viewLoadStatus
-        }
-        viewLoadStatus.finished(view)
-        viewLoadStatusMap.remove(view)
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view) // 获取视图对应的 ViewLoadStatus 实例
+        viewLoadStatus.finished(view) // 标记加载完成状态
         return viewLoadStatus
     }
 
-    fun setOnErrorRetryClickListener(view:View,click:(v:View)->Unit): (View) -> Unit {
-        viewLoadStatusErrorClickListenerMap[view]=click
-        viewLoadStatusMap[view]?.setOnErrorRetryClickListener(click)
-        return click
-    }
-    fun setOnEmptyRetryClickListener(view: View, click: (v: View) -> Unit): (View) -> Unit {
-        viewLoadStatusEmptyClickListenerMap[view] = click
-        viewLoadStatusMap[view]?.setOnEmptyRetryClickListener(click)
+    // 设置错误点击监听器
+    fun setOnErrorRetryClickListener(view: View, click: (v: View) -> Unit): (View) -> Unit {
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
+        viewLoadStatus.setOnErrorRetryClickListener(click)
         return click
     }
 
+    // 设置空点击监听器
+    fun setOnEmptyRetryClickListener(view: View, click: (v: View) -> Unit): (View) -> Unit {
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
+        viewLoadStatus.setOnEmptyRetryClickListener(click)
+        return click
+    }
+
+    // 获取视图的加载状态
     fun getViewLoadStatus(view: View): ViewLoadStatus.VIEW_STATUS? {
         viewLoadStatusMap[view]?.apply {
             return getCurrentViewStatus()
         }
         return null
+    }
+
+    private fun createAndCacheStatus(view: View): ViewLoadStatus {
+        val viewLoadStatus = ViewLoadStatus(view.context)
+        viewLoadStatusMap[view] = viewLoadStatus
+        return viewLoadStatus
+    }
+
+    fun unbindViews(mainActivity: MainActivity) {
+        val rootViewGroup =
+            mainActivity.window.decorView.findViewById<ViewGroup>(android.R.id.content)
+        unbindViewStatus(rootViewGroup)
+    }
+    fun unbindViews(viewGroup: ViewGroup): Boolean {
+        unbindViewStatus(viewGroup)
+        return true
+    }
+    private fun unbindViewStatus(rootViewGroup: ViewGroup) {
+        for (child in rootViewGroup.children) {
+            if(child is ViewGroup){
+                unbindViewStatus(child)
+            }else{
+                if (viewLoadStatusMap.contains(child)) {
+                    viewLoadStatusMap.remove(child)
+                }
+            }
+        }
     }
 }
