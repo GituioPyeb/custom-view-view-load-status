@@ -1,8 +1,19 @@
 # ViewLoadStatus：更好的管理View 状态
 
-- 支持 ConstraintLayout 布局
-- 支持 LinearLayout 布局
-- 未测试 RelativeLayout 布局
+**父布局**
+- 支持 ConstraintLayout 父布局
+- 支持 LinearLayout 父布局
+- 未测试 RelativeLayout 父布局
+
+**子布局**
+- TextView
+- ImageView
+- List
+- RecyclerView
+- Button
+- CardView
+- ...[自行测试]
+
 
 ## 功能展示：
 

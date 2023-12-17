@@ -29,6 +29,16 @@ val ViewGroup.unbindAllViewStatus:Boolean
         val viewLoadStatusManager = ViewLoadStatusManager.getInstance()
         return viewLoadStatusManager.unbindViews(this)
     }
+var View.viewShowStatus: ViewLoadStatus.VIEW_STATUS?
+    get() {
+        val viewLoadStatusManager = ViewLoadStatusManager.getInstance()
+        return viewLoadStatusManager.getViewShowStatus(this)
+    }
+    set(viewStatus) {
+        val viewLoadStatusManager = ViewLoadStatusManager.getInstance()
+        viewLoadStatusManager.setViewShowStatus(this,viewStatus!!)
+    }
+
 
 fun View.setOnEmptyRetryClickListener(action: (v:View) -> Unit) {
     val viewLoadStatusManager = ViewLoadStatusManager.getInstance()

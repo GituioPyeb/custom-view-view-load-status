@@ -12,6 +12,7 @@ import com.example.viewloadstatuslibs.view.showEmptyStatus
 import com.example.viewloadstatuslibs.view.showErrorStatus
 import com.example.viewloadstatuslibs.view.showFinishedStatus
 import com.example.viewloadstatuslibs.view.showLoadingStatus
+import com.example.viewloadstatuslibs.view.viewShowStatus
 import java.util.Timer
 import java.util.TimerTask
 
@@ -63,15 +64,17 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         binding.changeViewLoadStatusBtn.setOnClickListener {
-            when(ViewLoadStatusManager.getInstance().getViewLoadStatus(binding.image1)){
+            when(binding.image1.viewShowStatus){
                 ViewLoadStatus.VIEW_STATUS.LOADING -> {
                     binding.image1.showErrorStatus
+                    binding.errorButton.showErrorStatus
                     binding.cardView.showErrorStatus
                     binding.testTextView.showErrorStatus
                     binding.contentRecyclerView.showErrorStatus
                 }
                 ViewLoadStatus.VIEW_STATUS.ERROR -> {
                     binding.image1.showEmptyStatus
+                    binding.errorButton.showEmptyStatus
                     binding.cardView.showEmptyStatus.setOnErrorRetryClickListener {
                         Toast.makeText(this, "空状态", Toast.LENGTH_SHORT).show()
                     }
@@ -80,18 +83,22 @@ class MainActivity : AppCompatActivity() {
                 }
                 ViewLoadStatus.VIEW_STATUS.EMPTY -> {
                     binding.image1.showFinishedStatus
+                    binding.errorButton.showFinishedStatus
                     binding.cardView.showFinishedStatus
                     binding.contentRecyclerView.showFinishedStatus
                     binding.testTextView.showFinishedStatus
                 }
                 ViewLoadStatus.VIEW_STATUS.FINISHED -> {
                     binding.image1.showLoadingStatus
+                    binding.errorButton.showLoadingStatus
                     binding.cardView.showLoadingStatus
                     binding.testTextView.showLoadingStatus
                     binding.contentRecyclerView.showLoadingStatus
                 }
                 null -> {
+//                    Toast.makeText(this, "Null", Toast.LENGTH_SHORT).show()
                     binding.image1.showLoadingStatus
+                    binding.errorButton.showLoadingStatus
                     binding.cardView.showLoadingStatus
                     binding.contentRecyclerView.showLoadingStatus
                     binding.testTextView.showLoadingStatus

@@ -3,11 +3,10 @@ package com.example.viewloadstatuslibs.view
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.children
 
 class ViewLoadStatusManager private constructor(){
-    private val TAG = "ViewLoadStatusManager" // 日志标签
-
     companion object {
         @Volatile
         private var instance: ViewLoadStatusManager? = null
@@ -48,6 +47,11 @@ class ViewLoadStatusManager private constructor(){
         viewLoadStatus.finished(view) // 标记加载完成状态
         return viewLoadStatus
     }
+    @Synchronized
+    fun setViewShowStatus(view: View, viewStatus: ViewLoadStatus.VIEW_STATUS){
+        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
+        viewLoadStatus.setViewLoadStatus(viewStatus,view)
+    }
 
     // 设置错误点击监听器
     fun setOnErrorRetryClickListener(view: View, click: (v: View) -> Unit): (View) -> Unit {
@@ -64,9 +68,9 @@ class ViewLoadStatusManager private constructor(){
     }
 
     // 获取视图的加载状态
-    fun getViewLoadStatus(view: View): ViewLoadStatus.VIEW_STATUS? {
-        viewLoadStatusMap[view]?.apply {
-            return getCurrentViewStatus()
+    fun getViewShowStatus(view: View): ViewLoadStatus.VIEW_STATUS? {
+        viewLoadStatusMap[view]?.let {
+            return it.getCurrentViewStatus()
         }
         return null
     }
