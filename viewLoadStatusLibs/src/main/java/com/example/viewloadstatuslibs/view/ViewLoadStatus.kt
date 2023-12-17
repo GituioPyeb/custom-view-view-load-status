@@ -74,8 +74,14 @@ class ViewLoadStatus(context: Context) : LinearLayout(context) {
         layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
+    fun setMessage(msg:String){
+        this.message=msg
+        refreshViews()
+    }
+
     fun showViewIsLoading(view: View) {
         if (viewStatus == VIEW_STATUS.LOADING) return
+        if (view.visibility == (View.GONE or View.INVISIBLE)) return
         val viewGroup = view.parent as ViewGroup
         viewGroup.removeView(this)
         viewStatus = VIEW_STATUS.LOADING
@@ -87,6 +93,7 @@ class ViewLoadStatus(context: Context) : LinearLayout(context) {
 
     fun showViewIsError(view: View, msg: String = "加载失败，点击重试") {
         if (viewStatus == VIEW_STATUS.ERROR) return
+        if (view.visibility == (View.GONE or View.INVISIBLE)) return
         this.message = msg
         val viewGroup = view.parent as ViewGroup
         viewGroup.removeView(this)
@@ -100,6 +107,7 @@ class ViewLoadStatus(context: Context) : LinearLayout(context) {
 
     fun showViewEmpty(view: View, msg: String = "什么也没有，点击重试") {
         if (viewStatus == VIEW_STATUS.EMPTY) return
+        if (view.visibility == (View.GONE or View.INVISIBLE)) return
         this.message = msg
         val viewGroup = view.parent as ViewGroup
         viewGroup.removeView(this)
