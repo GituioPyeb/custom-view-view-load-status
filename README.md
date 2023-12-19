@@ -228,6 +228,12 @@ binding.root.unbindAllViewStatus
 //或者
 ViewLoadStatusManager.getInstance().unbindViews(this)
 ```
+添加动态设置View状态：
+`binding.view.viewShowStatus=ViewLoadStatus.LOADING`
+
+动态获取View 状态
+`val viewStatus=binding.view.viewShowStatus`
+
 
 ## 部署
 
