@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.children
 
-class ViewLoadStatusManager private constructor(){
+class ViewLoadStatusManager private constructor() {
     companion object {
         @Volatile
         private var instance: ViewLoadStatusManager? = null
+
         // 获取或初始化 ViewLoadStatusManager 的单例实例
         fun getInstance(): ViewLoadStatusManager {
             return instance ?: synchronized(this) {
@@ -18,7 +19,8 @@ class ViewLoadStatusManager private constructor(){
         }
     }
 
-    private val viewLoadStatusMap = LinkedHashMap<View, ViewLoadStatus>() // 存储视图和对应的 ViewLoadStatus 实例的映射关系
+    private val viewLoadStatusMap =
+        LinkedHashMap<View, ViewLoadStatus>() // 存储视图和对应的 ViewLoadStatus 实例的映射关系
 
     @Synchronized
     fun loading(view: View): ViewLoadStatus {
@@ -43,14 +45,16 @@ class ViewLoadStatusManager private constructor(){
 
     @Synchronized
     fun finished(view: View): ViewLoadStatus {
-        val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view) // 获取视图对应的 ViewLoadStatus 实例
+        val viewLoadStatus =
+            viewLoadStatusMap[view] ?: createAndCacheStatus(view) // 获取视图对应的 ViewLoadStatus 实例
         viewLoadStatus.finished(view) // 标记加载完成状态
         return viewLoadStatus
     }
+
     @Synchronized
-    fun setViewShowStatus(view: View, viewStatus: ViewLoadStatus.VIEW_STATUS){
+    fun setViewShowStatus(view: View, viewStatus: ViewLoadStatus.VIEW_STATUS) {
         val viewLoadStatus = viewLoadStatusMap[view] ?: createAndCacheStatus(view)
-        viewLoadStatus.setViewLoadStatus(viewStatus,view)
+        viewLoadStatus.setViewLoadStatus(viewStatus, view)
     }
 
     // 设置错误点击监听器
@@ -75,30 +79,37 @@ class ViewLoadStatusManager private constructor(){
         return null
     }
 
-    private fun createAndCacheStatus(view: View): ViewLoadStatus {
-        val viewLoadStatus = ViewLoadStatus(view.context)
-        viewLoadStatusMap[view] = viewLoadStatus
-        return viewLoadStatus
-    }
 
     fun unbindViews(activity: Activity) {
         val rootViewGroup =
             activity.window.decorView.findViewById<ViewGroup>(android.R.id.content)
         unbindViewStatus(rootViewGroup)
     }
+
     fun unbindViews(viewGroup: ViewGroup): Boolean {
         unbindViewStatus(viewGroup)
         return true
     }
+
     private fun unbindViewStatus(rootViewGroup: ViewGroup) {
+        // 遍历根视图容器的子视图
         for (child in rootViewGroup.children) {
-            if(child is ViewGroup){
+            if (child is ViewGroup) {
+                // 如果子视图是容器，则递归调用unbindViewStatus函数解除绑定
                 unbindViewStatus(child)
-            }else{
+            } else {
+                // 如果子视图不是容器，则检查该子视图是否在viewLoadStatusMap中存在
                 if (viewLoadStatusMap.contains(child)) {
+                    // 如果存在，则从viewLoadStatusMap中移除该子视图的绑定状态
                     viewLoadStatusMap.remove(child)
                 }
             }
         }
+    }
+
+    private fun createAndCacheStatus(view: View): ViewLoadStatus {
+        val viewLoadStatus = ViewLoadStatus(view.context)
+        viewLoadStatusMap[view] = viewLoadStatus
+        return viewLoadStatus
     }
 }

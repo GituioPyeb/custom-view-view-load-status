@@ -9,13 +9,9 @@ maven { url 'https://jitpack.io' }
 ```
 **步骤二：添加依赖**
 ```
-dependencies {
-    ...
-    implementation 'com.github.GituioPyeb:custom-view-view-load-status:0.2-TEST'
-    ...
-}
+implementation 'com.github.GituioPyeb:custom-view-view-load-status:0.2-TEST'
 ```
-
+## 支持的布局及控件
 **父布局**
 - 支持 ConstraintLayout 父布局
 - 支持 LinearLayout 父布局
