@@ -68,7 +68,7 @@ afterEvaluate {
                 from components.release
 
                 groupId='com.github.GituioPyeb'
-                artifactId='ViewLoadStatusR'
+                artifactId='viewLoadStatusLibs'
                 version='0.2-TEST'
             }
         }
