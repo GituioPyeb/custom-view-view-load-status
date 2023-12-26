@@ -1,5 +1,21 @@
 # ViewLoadStatus：更好的管理View 状态
 
+[![](https://jitpack.io/v/GituioPyeb/custom-view-view-load-status.svg)](https://jitpack.io/#GituioPyeb/custom-view-view-load-status)
+
+## 使用依赖方式导入
+**步骤一：在项目根目录下的`build.gradle`添加**
+```
+maven { url 'https://jitpack.io' }
+```
+**步骤二：添加依赖**
+```
+dependencies {
+    ...
+    implementation 'com.github.GituioPyeb:custom-view-view-load-status:0.2-TEST'
+    ...
+}
+```
+
 **父布局**
 - 支持 ConstraintLayout 父布局
 - 支持 LinearLayout 父布局
