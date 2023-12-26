@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
 }
+group='com.github.GituioPyeb'
+version='0.2-TEST'
 
 android {
     namespace 'com.example.viewloadstatuslibs'
@@ -59,13 +61,16 @@ dependencies {
 
 
 afterEvaluate {
-    android.libraryVariants.each {variant->
-        publishing.publications.create(variant.name,MavenPublication){
-            from components.findByName(variant.name)
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
 
-            groupId='com.github.GituioPyeb'
-            artifactId='viewLoadStatusLibs'
-            version='0.2-test'
+                groupId='com.github.GituioPyeb'
+                artifactId='ViewLoadStatusR'
+                version='0.2-TEST'
+            }
         }
     }
 }
